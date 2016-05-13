@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-import acidhax.cordova.chromecast.CastMediaControlIntent;
+import com.google.android.gms.cast.CastMediaControlIntent;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
