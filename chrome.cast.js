@@ -443,8 +443,9 @@ chrome.cast = {
 		MediaInfo: function (contentId, contentType) {
 		  this.contentId = contentId;
 		  this.streamType = chrome.cast.media.StreamType.BUFFERED;
-		  this.contentType = contentType;
-		  this.customData = this.duration = this.metadata = null;
+		  this.contentType = typeof contentType != 'undefined' ? contentType : '';
+		  this.customData = this.metadata = {};
+		  this.duration = 0;
 		}
 	}
 };
