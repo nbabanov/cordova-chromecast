@@ -116,7 +116,7 @@ public class ChromecastSession
 			Cast.CastApi.sendMessage(mApiClient, namespace, message).setResultCallback(new ResultCallback<Status>() {
 		        @Override
 		        public void onResult(Status result) {
-		          if (!result.isSuccess()) {
+		          if (result.isSuccess()) {
 		        	  callback.onSuccess();
 		          } else {
 		        	  callback.onError(result.toString());
