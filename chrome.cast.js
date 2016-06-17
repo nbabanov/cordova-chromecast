@@ -1029,13 +1029,12 @@ chrome.cast.media.Media.prototype._update = function(isAlive, obj) {
 function createRouteElement(route) {
 	var el = document.createElement('li');
 	el.classList.add('cast-modal__routes-container__route');
-	el.addEventListener('touchstart', onRouteClick);
 	el.textContent = route.name;
 	el.setAttribute('data-routeid', route.id);
 	return el;
 }
 
-function onRouteClick() {
+function onRouteClick(successCallback, errorCallback) {
 	var id = this.getAttribute('data-routeid');
 
 	if (id) {
@@ -1055,13 +1054,15 @@ function onRouteClick() {
 			var session = _sessions[sessionId] = new chrome.cast.Session(sessionId, appId, displayName, appImages, receiver);
 
 			_sessionListener && _sessionListener(session);
+
+			callback(session);
 		});
 
 		document.getElementsByClassName('cast-modal-shadow')[0].remove();
 	}
 }
 
-chrome.cast.getRouteListElement = function() {
+chrome.cast.getRouteListElement = function(successCallback, errorCallback) {
 	var shadow = document.createElement('div');
 	shadow.classList.add('cast-modal-shadow');
 
@@ -1074,13 +1075,21 @@ chrome.cast.getRouteListElement = function() {
 	var routeContainer = document.createElement('div');
 	routeContainer.classList.add('cast-modal__routes-container');
 
+	for (var i = 0; i < _routeListEl.children.length; i++) {
+		_routeListEl.children[i].addEventListener('touchstart', function () {
+			onRouteClick(successCallback, errorCallback);
+		});
+	}
+
 	routeContainer.appendChild(_routeListEl);
 	modal.appendChild(header);
 	modal.appendChild(routeContainer);
 	shadow.appendChild(modal);
 
 	shadow.addEventListener('touchstart', function () {
-		document.getElementsByClassName('cast-modal-shadow')[0].remove();
+		if (document.getElementsByClassName('cast-modal-shadow').length > 0) {
+			document.getElementsByClassName('cast-modal-shadow')[0].remove();
+		}
 	});
 
 	document.getElementsByTagName('body')[0].appendChild(shadow);
