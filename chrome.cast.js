@@ -536,9 +536,9 @@ chrome.cast.requestSession = function (successCallback, errorCallback, opt_sessi
                 session.media[0] = _currentMedia;
             }
 
-			chrome.cast.getRouteListElement();
 			successCallback(session);
 			_sessionListener(session); /*Fix - Already has a sessionListener*/
+			chrome.cast.getRouteListElement();
 		} else {
 			handleError(err, errorCallback);
 		}
@@ -1076,7 +1076,8 @@ chrome.cast.getRouteListElement = function() {
 	routeContainer.classList.add('cast-modal__routes-container');
 
 	routeContainer.appendChild(_routeListEl);
-	modal.appendChild(header, routeContainer);
+	modal.appendChild(header);
+	modal.appendChild(routeContainer);
 	shadow.appendChild(modal);
 
 	shadow.addEventListener('touchstart', function () {
