@@ -1029,7 +1029,7 @@ chrome.cast.media.Media.prototype._update = function(isAlive, obj) {
 
 function createRouteElement(route) {
 	var el = document.createElement('li');
-	el.classList.add('route');
+	el.classList.add('cast-modal__routes-container__route');
 	el.addEventListener('touchstart', onRouteClick);
 	el.textContent = route.name;
 	el.setAttribute('data-routeid', route.id);
@@ -1058,12 +1058,24 @@ function onRouteClick() {
 			_sessionListener && _sessionListener(session);
 		});
 
-		this.parentElement.remove();
+		document.getElementsByClassName('cast-routes-container')[0].remove();
 	}
 }
 
 chrome.cast.getRouteListElement = function() {
-	 document.getElementsByTagName('body')[0].appendChild(_routeListEl);
+	var shadow = document.createElement('div');
+	shadow.addClass('cast-modal__shadow');
+	var container = document.createElement('div');
+	container.addClass('cast-modal__routes-container');
+
+	container.addChild(_routeListEl);
+	shadow.addChild(container);
+
+	shadow.addEventListener('touchstart', function () {
+		document.getElementsByClassName('cast-modal__shadow').remove();
+	});
+
+	document.getElementsByTagName('body')[0].appendChild(shadow);
 };
 
 
