@@ -538,7 +538,6 @@ chrome.cast.requestSession = function (successCallback, errorCallback, opt_sessi
 
 			successCallback(session);
 			_sessionListener(session); /*Fix - Already has a sessionListener*/
-			chrome.cast.getRouteListElement();
 		} else {
 			handleError(err, errorCallback);
 		}
