@@ -1064,15 +1064,21 @@ function onRouteClick() {
 
 chrome.cast.getRouteListElement = function() {
 	var shadow = document.createElement('div');
-	shadow.addClass('cast-modal__shadow');
-	var container = document.createElement('div');
-	container.addClass('cast-modal__routes-container');
+	shadow.classList.add('cast-modal-shadow');
 
-	container.addChild(_routeListEl);
-	shadow.addChild(container);
+	var modal = document.createElement('div').('cast-modal');
+	var header = document.createElement('h2');
+	header.innerHTML = 'Choose a Chromecast';
+
+	var routeContainer = document.createElement('div');
+	routeContainer.classList.add('cast-modal__routes-container');
+
+	routeContainer.appendChild(_routeListEl);
+	modal.appendChild(header, routeContainer);
+	shadow.appendChild(modal);
 
 	shadow.addEventListener('touchstart', function () {
-		document.getElementsByClassName('cast-modal__shadow').remove();
+		document.getElementsByClassName('cast-modal-shadow').remove();
 	});
 
 	document.getElementsByTagName('body')[0].appendChild(shadow);
