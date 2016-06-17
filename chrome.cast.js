@@ -1034,8 +1034,8 @@ function createRouteElement(route) {
 	return el;
 }
 
-function onRouteClick(successCallback, errorCallback) {
-	var id = this.getAttribute('data-routeid');
+function onRouteClick(target, successCallback, errorCallback) {
+	var id = target.getAttribute('data-routeid');
 
 	if (id) {
 		try {
@@ -1080,8 +1080,8 @@ chrome.cast.getRouteListElement = function(successCallback, errorCallback) {
 	routeContainer.classList.add('cast-modal__routes-container');
 
 	for (var i = 0; i < _routeListEl.children.length; i++) {
-		_routeListEl.children[i].addEventListener('touchstart', function () {
-			onRouteClick(successCallback, errorCallback);
+		_routeListEl.children[i].addEventListener('touchstart', function (event) {
+			onRouteClick(event.target, successCallback, errorCallback);
 		});
 	}
 
