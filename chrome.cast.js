@@ -1063,7 +1063,7 @@ function onRouteClick() {
 }
 
 chrome.cast.getRouteListElement = function() {
-	 document.selectElementsByTagName('body')[0].appendChild(_routeListEl);
+	 document.getElementsByTagName('body')[0].appendChild(_routeListEl);
 };
 
 
