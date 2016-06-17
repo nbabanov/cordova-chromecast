@@ -1045,6 +1045,10 @@ function onRouteClick(successCallback, errorCallback) {
 		}
 
 		execute('selectRoute', id, function(err, obj) {
+			if (err) {
+				errorCallback(err);
+			}
+
 			var sessionId = obj.sessionId;
 			var appId = obj.appId;
 			var displayName = obj.displayName;
@@ -1055,7 +1059,7 @@ function onRouteClick(successCallback, errorCallback) {
 
 			_sessionListener && _sessionListener(session);
 
-			callback(session);
+			successCallback(session);
 		});
 
 		document.getElementsByClassName('cast-modal-shadow')[0].remove();
