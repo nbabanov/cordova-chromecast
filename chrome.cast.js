@@ -1057,11 +1057,13 @@ function onRouteClick() {
 
 			_sessionListener && _sessionListener(session);
 		});
+
+		this.parentElement.remove();
 	}
 }
 
 chrome.cast.getRouteListElement = function() {
-	return _routeListEl;
+	 document.selectElementsByTagName('body')[0].appendChild(_routeListEl);
 };
 
 
