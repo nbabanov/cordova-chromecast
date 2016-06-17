@@ -1068,7 +1068,7 @@ chrome.cast.getRouteListElement = function() {
 
 	var modal = document.createElement('div');
 	modal.classList.add('cast-modal');
-	
+
 	var header = document.createElement('h2');
 	header.innerHTML = 'Choose a Chromecast';
 
@@ -1080,7 +1080,7 @@ chrome.cast.getRouteListElement = function() {
 	shadow.appendChild(modal);
 
 	shadow.addEventListener('touchstart', function () {
-		document.getElementsByClassName('cast-modal-shadow').remove();
+		document.getElementsByClassName('cast-modal-shadow')[0].remove();
 	});
 
 	document.getElementsByTagName('body')[0].appendChild(shadow);
