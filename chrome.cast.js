@@ -1066,7 +1066,9 @@ chrome.cast.getRouteListElement = function() {
 	var shadow = document.createElement('div');
 	shadow.classList.add('cast-modal-shadow');
 
-	var modal = document.createElement('div').('cast-modal');
+	var modal = document.createElement('div');
+	modal.classList.add('cast-modal');
+	
 	var header = document.createElement('h2');
 	header.innerHTML = 'Choose a Chromecast';
 
