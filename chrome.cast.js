@@ -1058,7 +1058,7 @@ function onRouteClick() {
 			_sessionListener && _sessionListener(session);
 		});
 
-		document.getElementsByClassName('cast-routes-container')[0].remove();
+		document.getElementsByClassName('cast-modal-shadow')[0].remove();
 	}
 }
 
