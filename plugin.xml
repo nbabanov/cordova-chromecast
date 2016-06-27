@@ -9,16 +9,16 @@
 
   <name>Cordova ChromeCast</name>
 
-  <js-module src="chrome.cast.js" name="ChromecastApi">
-    <clobbers target="chrome.cast" />
-  </js-module>
-
-  <js-module src="EventEmitter.js" name="EventEmitter"></js-module>
-
-  <js-module src="tests/tests.js" name="tests">
-  </js-module>
-
   <platform name="android">
+
+    <js-module src="chrome.cast.js" name="ChromecastApi">
+      <clobbers target="chrome.cast" />
+    </js-module>
+
+    <js-module src="EventEmitter.js" name="EventEmitter"></js-module>
+
+    <js-module src="tests/tests.js" name="tests">
+    </js-module>
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="Chromecast">
