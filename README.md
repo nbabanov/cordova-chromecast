@@ -45,7 +45,7 @@ When you call `chrome.cast.requestSession()` an ugly popup will be displayed to 
 
 ##Demo
 
-```
+```javascript
 if (!chrome.cast || !chrome.cast.isAvailable) {
     setTimeout(initializeCastApi, 1000);
 }
