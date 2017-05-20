@@ -5,13 +5,13 @@ I have forked this repo out of Exozet's repo, because I wanted to bugfix or rath
 You can find a working demo at the bottom of this readme.
 
 
-##Original repo
+## Original repo
 
 ```
 https://github.com/GetVideostream/cordova-chromecast.git
 ```
 
-##Exozet's repo
+## Exozet's repo
 Exozet created fixes required for the plugin to run on the latest cordova versions
 
 ```
@@ -19,7 +19,7 @@ https://github.com/exozet/cordova-chromecast.git
 ```
 
 
-##Installation
+## Installation
 For now, add the plugin from this repository.
 
 ```
@@ -36,14 +36,14 @@ If not you will need to import the following projects as Library Projects in ord
 - `adt-bundle\sdk\extras\android\support\v7\appcompat`
 - `adt-bundle\sdk\extras\android\support\v7\mediarouter`
 
-##Usage
+## Usage
 
 This project attempts to implement the official Google Cast SDK for Chrome... in Cordova. We've made a lot of progress in making this possible, check out the offical docs for examples: https://developers.google.com/cast/docs/chrome_sender
 
 When you call `chrome.cast.requestSession()` an ugly popup will be displayed to select a Chromecast. If you're not cool with this - you can call: `chrome.cast.getRouteListElement()` which will return a `<ul>` tag that contains the Chromecasts in a list. All you have to do is style that bad boy and you're off to the races!
 
 
-##Demo
+## Demo
 
 ```javascript
 if (!chrome.cast || !chrome.cast.isAvailable) {
