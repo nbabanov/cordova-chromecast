@@ -123,8 +123,8 @@ function onMediaError(e) {
 *	Sends media to the chromecast
 *	NOTE: Default receiver only accepts media files (videos, audio and/or subtitles)	
 *
-*	@param url - url
-*	@param type - mime type 
+*	@param {string} url - url
+*	@param {string} type - mime type 
 */
 
 function sendMedia(url, type) {
