@@ -126,7 +126,9 @@ public class ChromecastMediaController {
             for (int i=0; i<imageUrls.length(); i++) {
                 JSONObject imageObj = imageUrls.getJSONObject(i); 
                 String imageUrl = imageObj.has("url") ? imageObj.getString("url") : "undefined";
-                if (imageUrl.indexOf("http://")<0) { continue; } // TODO: don't add image?
+                if (imageUrl.indexOf("http://") == -1 && imageUrl.indexOf("https://") == -1) {
+			continue; 
+		} 
                 Uri imageURI = Uri.parse( imageUrl );
                 WebImage webImage = new WebImage(imageURI);
                 mediaMetadata.addImage(webImage);
