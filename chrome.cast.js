@@ -461,6 +461,7 @@ var _currentMedia = null;
 var _routeListEl = document.createElement('ul');
 _routeListEl.classList.add('route-list');
 var _routeList = {};
+var _routeListHandlers = [];
 var _routeRefreshInterval = null;
 
 var _receiverAvailable = false;
@@ -1080,9 +1081,14 @@ chrome.cast.getRouteListElement = function(successCallback, errorCallback) {
 	routeContainer.classList.add('cast-modal__routes-container');
 
 	for (var i = 0; i < _routeListEl.children.length; i++) {
-		_routeListEl.children[i].addEventListener('touchstart', function (event) {
-			onRouteClick(event.target, successCallback, errorCallback);
-		});
+		var routeId = _routeListEl.children[i].dataset.routeid;
+	    	if(_routeListHandlers.indexOf(routeId) === -1){
+			_routeListEl.children[i].addEventListener('touchstart', function (event) {
+				onRouteClick(event.target, successCallback, errorCallback);
+			});
+			_routeListHandlers.push(routeId);
+		}
+		
 	}
 
 	routeContainer.appendChild(_routeListEl);
