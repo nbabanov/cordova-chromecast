@@ -1081,6 +1081,7 @@ chrome.cast.getRouteListElement = function(successCallback, errorCallback) {
 	routeContainer.classList.add('cast-modal__routes-container');
 
 	for (var i = 0; i < _routeListEl.children.length; i++) {
+		//only add eventhandlers once
 		var routeId = _routeListEl.children[i].dataset.routeid;
 	    	if(_routeListHandlers.indexOf(routeId) === -1){
 			_routeListEl.children[i].addEventListener('touchstart', function (event) {
