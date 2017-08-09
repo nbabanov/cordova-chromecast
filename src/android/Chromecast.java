@@ -1,6 +1,8 @@
 package acidhax.cordova.chromecast;
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,6 +25,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.PowerManager;
 import android.support.v7.media.MediaRouter;
 import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter.RouteInfo;
@@ -43,7 +46,8 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 	private String lastAppId = null;
 
 	private SharedPreferences settings;
-
+	private WifiManager.WifiLock wifiLock;
+	private PowerManager.WakeLock wakeLock;
 
 	private volatile ChromecastSession currentSession;
 
@@ -318,6 +322,22 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 						callbackContext.success(session.createSessionObject());
 					} else {
 						sendJavascript("chrome.cast._.sessionJoined(" + Chromecast.this.currentSession.createSessionObject().toString() + ");");
+					}
+					Context context = cordova.getActivity().getApplicationContext();
+					PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+					if(wakeLock == null) {
+						wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "cast-server-cpu");
+					}
+					if(wakeLock != null) {
+						wakeLock.acquire();
+
+					}
+					WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+					if(wifiLock == null) {
+						wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF , "MyWifiLock");
+					}
+					if(wifiLock != null) {
+							wifiLock.acquire();
 					}
 				}
 			}
@@ -688,7 +708,7 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 	 */
 	protected void onRouteAdded(MediaRouter router, final RouteInfo route) {
 		if (this.autoConnect && this.currentSession == null && !route.getName().equals("Phone")) {
-			log("Attempting to join route " + route.getName());
+			log("Attempting to join rouonte " + route.getName());
 			this.joinSession(route);
 		} else {
 			log("For some reason, not attempting to join route " + route.getName() + ", " + this.currentSession + ", " + this.autoConnect);
