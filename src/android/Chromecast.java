@@ -315,31 +315,37 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 				ChromecastSession session = (ChromecastSession) object;
 				if (object == null) {
 					onError("unknown");
-				} else if (session == Chromecast.this.currentSession){
-					Chromecast.this.setLastSessionId(Chromecast.this.currentSession.getSessionId());
+				} else {
+					if (session == Chromecast.this.currentSession) {
+						Chromecast.this.setLastSessionId(Chromecast.this.currentSession.getSessionId());
 
-					if (callbackContext != null) {
-						callbackContext.success(session.createSessionObject());
-					} else {
-						sendJavascript("chrome.cast._.sessionJoined(" + Chromecast.this.currentSession.createSessionObject().toString() + ");");
+						if (callbackContext != null) {
+							callbackContext.success(session.createSessionObject());
+						} else {
+							sendJavascript("chrome.cast._.sessionJoined(" + Chromecast.this.currentSession.createSessionObject().toString() + ");");
+						}
+
 					}
 					Context context = cordova.getActivity().getApplicationContext();
-					PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
-					if(wakeLock == null) {
-						wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "cast-server-cpu");
+
+					if(Chromecast.this.wakeLock == null) {
+						PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+						Chromecast.this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "cast-server-cpu");
 					}
-					if(wakeLock != null) {
-						wakeLock.acquire();
+					if(Chromecast.this.wakeLock != null) {
+						Chromecast.this.wakeLock.acquire();
 
 					}
-					WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-					if(wifiLock == null) {
-						wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF , "MyWifiLock");
+
+					if(Chromecast.this.wifiLock == null) {
+						WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+						Chromecast.this.wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF , "MyWifiLock");
 					}
-					if(wifiLock != null) {
-							wifiLock.acquire();
+					if(Chromecast.this.wifiLock != null) {
+						Chromecast.this.wifiLock.acquire();
 					}
 				}
+
 			}
 
 			@Override
