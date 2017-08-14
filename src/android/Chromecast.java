@@ -70,7 +70,7 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 		super.onDestroy();
 
 		if (this.currentSession != null) {
-            this.unlockLocks();
+			this.unlockLocks();
 //    		this.currentSession.kill(new ChromecastSessionCallback() {
 //				void onSuccess(Object object) {	}
 //				void onError(String reason) {}
@@ -339,7 +339,7 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 	 */
 	private void createSession(RouteInfo routeInfo, final CallbackContext callbackContext) {
 
-        this.currentSession = new ChromecastSession(routeInfo, this.cordova, this, this);
+		this.currentSession = new ChromecastSession(routeInfo, this.cordova, this, this);
 		//this.lockLocks();
 		// Launch the app.
 		this.currentSession.launch(this.appId, new ChromecastSessionCallback() {
@@ -841,3 +841,4 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 	}
 
 }
+
