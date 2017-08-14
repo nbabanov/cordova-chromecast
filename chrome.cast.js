@@ -1,4 +1,3 @@
-cordova.define("acidhax.cordova.chromecast.ChromecastApi", function (require, exports, module) {
     var EventEmitter = require('acidhax.cordova.chromecast.EventEmitter');
 
     var chrome = {};
@@ -1263,4 +1262,3 @@ cordova.define("acidhax.cordova.chromecast.ChromecastApi", function (require, ex
             throw new Error('Unable to setup chrome.cast API' + err);
         }
     });
-});
