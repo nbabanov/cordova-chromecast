@@ -1,6 +1,8 @@
 package acidhax.cordova.chromecast;
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,6 +25,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.PowerManager;
 import android.support.v7.media.MediaRouter;
 import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter.RouteInfo;
@@ -43,7 +46,8 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 	private String lastAppId = null;
 
 	private SharedPreferences settings;
-
+	private WifiManager.WifiLock wifiLock;
+	private PowerManager.WakeLock wakeLock;
 
 	private volatile ChromecastSession currentSession;
 
@@ -59,12 +63,14 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 		this.settings = this.cordova.getActivity().getSharedPreferences(SETTINGS_NAME, 0);
 		this.lastSessionId = settings.getString("lastSessionId", "");
 		this.lastAppId = settings.getString("lastAppId", "");
+
 	}
 
 	public void onDestroy() {
 		super.onDestroy();
 
 		if (this.currentSession != null) {
+			this.unlockLocks();
 //    		this.currentSession.kill(new ChromecastSessionCallback() {
 //				void onSuccess(Object object) {	}
 //				void onError(String reason) {}
@@ -294,15 +300,47 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 
 		return true;
 	}
+	private boolean lockLocks(){
+		Context context = cordova.getActivity().getApplicationContext();
 
+		if(wakeLock == null) {
+			PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+			wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "cast-server-cpu");
+		}
+		if(wakeLock != null) {
+			wakeLock.acquire();
+
+		}
+
+		if(wifiLock == null) {
+			WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+			wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF , "MyWifiLock");
+		}
+		if(wifiLock != null) {
+			wifiLock.acquire();
+		}
+		return true;
+	}
+	private boolean unlockLocks(){
+		if(this.wakeLock != null) {
+			this.wakeLock.release();
+			this.wakeLock = null;
+		}
+		if(this.wifiLock != null) {
+			this.wifiLock.release();
+			this.wifiLock = null;
+		}
+		return true;
+	}
 	/**
 	 * Helper for the creating of a session! The user-selected RouteInfo needs to be passed to a new ChromecastSession
 	 * @param routeInfo
 	 * @param callbackContext
 	 */
 	private void createSession(RouteInfo routeInfo, final CallbackContext callbackContext) {
-		this.currentSession = new ChromecastSession(routeInfo, this.cordova, this, this);
 
+		this.currentSession = new ChromecastSession(routeInfo, this.cordova, this, this);
+		//this.lockLocks();
 		// Launch the app.
 		this.currentSession.launch(this.appId, new ChromecastSessionCallback() {
 
@@ -311,15 +349,22 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 				ChromecastSession session = (ChromecastSession) object;
 				if (object == null) {
 					onError("unknown");
-				} else if (session == Chromecast.this.currentSession){
-					Chromecast.this.setLastSessionId(Chromecast.this.currentSession.getSessionId());
+				} else {
+					if (session == Chromecast.this.currentSession) {
+						Chromecast.this.setLastSessionId(Chromecast.this.currentSession.getSessionId());
 
-					if (callbackContext != null) {
-						callbackContext.success(session.createSessionObject());
-					} else {
-						sendJavascript("chrome.cast._.sessionJoined(" + Chromecast.this.currentSession.createSessionObject().toString() + ");");
+						if (callbackContext != null) {
+							callbackContext.success(session.createSessionObject());
+						} else {
+							sendJavascript("chrome.cast._.sessionJoined(" + Chromecast.this.currentSession.createSessionObject().toString() + ");");
+						}
+
 					}
+
+
 				}
+				Chromecast.this.lockLocks();
+
 			}
 
 			@Override
@@ -334,6 +379,7 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 						callbackContext.error("unknown");
 					}
 				}
+				Chromecast.this.unlockLocks();
 			}
 
 		});
@@ -586,6 +632,7 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 			this.currentSession.kill(genericCallback(callbackContext));
 			this.currentSession = null;
 			this.setLastSessionId("");
+			this.unlockLocks();
 		} else {
 			callbackContext.success();
 		}
@@ -603,10 +650,11 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 			this.currentSession.leave(genericCallback(callbackContext));
 			this.currentSession = null;
 			this.setLastSessionId("");
+
 		} else {
 			callbackContext.success();
 		}
-
+		this.unlockLocks();
 		return true;
 	}
 
@@ -688,7 +736,7 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 	 */
 	protected void onRouteAdded(MediaRouter router, final RouteInfo route) {
 		if (this.autoConnect && this.currentSession == null && !route.getName().equals("Phone")) {
-			log("Attempting to join route " + route.getName());
+			log("Attempting to join rouonte " + route.getName());
 			this.joinSession(route);
 		} else {
 			log("For some reason, not attempting to join route " + route.getName() + ", " + this.currentSession + ", " + this.autoConnect);
@@ -793,3 +841,4 @@ public class Chromecast extends CordovaPlugin implements ChromecastOnMediaUpdate
 	}
 
 }
+

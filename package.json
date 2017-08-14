@@ -1,0 +1,20 @@
+{
+  "name": "Chromecast",
+  "version": "1.0.3",
+  "description": "Web intents for Cordova",
+  "cordova": {
+    "id": "acidhax.cordova.chromecast",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "license": "MIT",
+  "engines": {
+    "cordovaDependencies": {
+      "3.0.0": {
+        "cordova": ">100"
+      }
+    }
+  }
+}
