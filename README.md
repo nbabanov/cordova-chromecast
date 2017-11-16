@@ -1,3 +1,7 @@
+# DISCLAIMER
+This repo is no longer maintained. If you want to contribute, feel free to submit PR's.
+
+
 Chromecast plugin for Cordova
 ==================
 
